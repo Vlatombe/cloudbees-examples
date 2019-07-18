@@ -1,0 +1,121 @@
+ad_identifiers:
+  - jenkins
+init_config:
+  is_jmx: true
+  collect_default_metrics: true
+jmx_metrics:
+  - include:
+      bean: 'io.jenkins:type=Http,name=ActiveRequests'
+      attribute:
+        Count:
+          metric_type: gauge
+          alias: jenkins.http.activeRequests
+  - include:
+      bean: 'io.jenkins:type=Queue,name=Size'
+      attribute:
+        Value:
+          metric_type: gauge
+          alias: jenkins.queue.size
+  - include:
+      bean: 'io.jenkins:type=Queue,name=Stuck'
+      attribute:
+        Value:
+          metric_type: gauge
+          alias: jenkins.queue.stuck
+  - include:
+      bean: 'io.jenkins:type=Queue,name=Blocked'
+      attribute:
+        Value:
+          metric_type: gauge
+          alias: jenkins.queue.blocked
+  - include:
+      bean: 'io.jenkins:type=Node'
+      attribute:
+        Value:
+          metric_type: gauge
+          alias: jenkins.node.count
+  - include:
+      bean: 'io.jenkins:type=Job'
+      attribute:
+        Value:
+          metric_type: gauge
+          alias: jenkins.job.count
+  - include:
+      bean: 'io.jenkins:name=Executor'
+      attribute:
+        Value:
+          metric_type: gauge
+          alias: jenkins.executor.count
+  # Plugins
+  - include:
+      bean: 'io.jenkins:type=Plugins,name=Active'
+      attribute:
+        Value:
+          metric_type: gauge
+          alias: jenkins.plugins.active
+  - include:
+      bean: 'io.jenkins:type=Plugins,name=Inactive'
+      attribute:
+        Value:
+          metric_type: gauge
+          alias: jenkins.plugins.inactive
+  - include:
+      bean: 'io.jenkins:type=Plugins,name=Failed'
+      attribute:
+        Value:
+          metric_type: gauge
+          alias: jenkins.plugins.failed
+  - include:
+      bean: 'io.jenkins:type=Plugins,name=WithUpdate'
+      attribute:
+        Value:
+          metric_type: gauge
+          alias: jenkins.plugins.withUpdate
+  - include:
+      bean: 'io.jenkins:type=Kubernetes-client,class=Connections,name=Running'
+      attribute:
+        Value:
+          metric_type: gauge
+          alias: jenkins.kubernetes-client.connections.running
+  - include:
+      bean: 'io.jenkins:type=Kubernetes-client,class=Connections,name=Running'
+      attribute:
+        Value:
+          metric_type: gauge
+          alias: jenkins.kubernetes-client.connections.running
+  - include:
+      bean: 'io.jenkins:type=Kubernetes,name=Failure'
+      attribute:
+        Count:
+          metric_type: counter
+          alias: jenkins.kubernetes.failure
+  - include:
+      bean: 'io.jenkins:type=Kubernetes,name=Success'
+      attribute:
+        Count:
+          metric_type: counter
+          alias: jenkins.kubernetes.success
+  - include:
+      bean: 'io.jenkins:type=Kubernetes,name=SuccessRate'
+      attribute:
+        Value:
+          metric_type: rate
+          alias: jenkins.kubernetes.successRate
+  - include:
+      bean: 'io.jenkins:type=Kubernetes,name=Total'
+      attribute:
+        Count:
+          metric_type: counter
+          alias: jenkins.kubernetes.total
+  - include:
+      bean: 'io.jenkins:type=Kubernetes'
+      attribute:
+        Mean:
+          metric_type: gauge
+          alias: jenkins.kubernetes.duration.mean
+        Min:
+          metric_type: gauge
+          alias: jenkins.kubernetes.duration.min
+        Max:
+          metric_type: gauge
+          alias: jenkins.kubernetes.duration.max

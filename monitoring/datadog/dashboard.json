@@ -1,0 +1,427 @@
+{
+  "read_only": true,
+  "graphs": [
+    {
+      "definition": {
+        "style": {
+          "palette": "green_to_orange",
+          "paletteFlip": false
+        },
+        "group": [
+          "aws_autoscaling_groupname"
+        ],
+        "noMetricHosts": true,
+        "viz": "hostmap",
+        "scope": [
+          "kubernetescluster:CLUSTERNAME"
+        ],
+        "requests": [
+          {
+            "q": "avg:aws.ec2.cpuutilization{kubernetescluster:CLUSTERNAME} by {host}",
+            "type": "size"
+          },
+          {
+            "q": "avg:aws.ec2.host_ok{kubernetescluster:CLUSTERNAME} by {host}",
+            "type": "fill"
+          }
+        ],
+        "noGroupHosts": false
+      },
+      "title": "EC2 Hosts Health and CPU utilization"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "requests": [
+          {
+            "q": "avg:aws.autoscaling.group_desired_capacity{autoscaling_group:nodes.CLUSTERNAME}/avg:aws.autoscaling.group_max_size{autoscaling_group:nodes.CLUSTERNAME}*100",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "solid"
+            },
+            "type": "area"
+          }
+        ]
+      },
+      "title": "Autoscaling capacity (%)"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "requests": [
+          {
+            "q": "avg:kubernetes_state.node.pods_capacity{*}",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "solid"
+            },
+            "type": "line"
+          },
+          {
+            "q": "max:kubernetes.pods.running{*}",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "dashed"
+            },
+            "type": "line"
+          }
+        ]
+      },
+      "title": "Nodes remaining capacity"
+    },
+    {
+      "definition": {
+        "tags": [
+          "*"
+        ],
+        "group_by": [],
+        "viz": "check_status",
+        "check": "kubernetes.kubelet.check",
+        "grouping": "cluster"
+      },
+      "title": "Agent Up"
+    },
+    {
+      "definition": {
+        "style": {
+          "palette": "green_to_orange",
+          "paletteFlip": false
+        },
+        "group": [
+          "aws_autoscaling_groupname"
+        ],
+        "noMetricHosts": false,
+        "viz": "hostmap",
+        "scope": [
+          "kubernetescluster:CLUSTERNAME"
+        ],
+        "requests": [
+          {
+            "q": "avg:kubernetes.memory.usage{kubernetescluster:CLUSTERNAME} by {host}",
+            "type": "size"
+          },
+          {
+            "q": "avg:kubernetes.memory.capacity{kubernetescluster:CLUSTERNAME} by {host}",
+            "type": "fill"
+          }
+        ],
+        "noGroupHosts": true
+      },
+      "title": "Worker nodes"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "requests": [
+          {
+            "q": "max:kubernetes.memory.capacity{*}",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "solid"
+            },
+            "type": "line"
+          },
+          {
+            "q": "max:kubernetes.memory.usage{*}",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "solid"
+            },
+            "type": "line"
+          }
+        ]
+      },
+      "title": "Cluster memory capacity/usage"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "requests": [
+          {
+            "q": "sum:kubernetes.pods.running{*} by {host}",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "solid"
+            },
+            "type": "area"
+          }
+        ]
+      },
+      "title": "Sum of pods running"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "requests": [
+          {
+            "q": "max:jenkins.queue.size{$instance} by {instance}",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "solid"
+            },
+            "type": "area"
+          }
+        ]
+      },
+      "title": "Queue size"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "requests": [
+          {
+            "q": "max:jenkins.node.count{$instance} by {instance}",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "solid"
+            },
+            "type": "area"
+          }
+        ]
+      },
+      "title": "Agents count"
+    },
+    {
+      "definition": {
+        "autoscale": true,
+        "precision": 2,
+        "viz": "query_value",
+        "requests": [
+          {
+            "q": "max:jenkins.plugins.failed{$instance}",
+            "aggregator": "avg",
+            "conditional_formats": [
+              {
+                "palette": "white_on_red",
+                "value": 0,
+                "comparator": ">"
+              },
+              {
+                "palette": "white_on_green",
+                "value": 1,
+                "comparator": "<"
+              }
+            ]
+          }
+        ]
+      },
+      "title": "Plugins failed"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "requests": [
+          {
+            "q": "max:jenkins.queue.blocked{$instance} by {instance}",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "solid"
+            },
+            "type": "area"
+          },
+          {
+            "q": "max:jenkins.queue.stuck{$instance} by {instance}",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "solid"
+            },
+            "type": "line"
+          }
+        ]
+      },
+      "title": "Stuck / Blocked builds"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "requests": [
+          {
+            "q": "max:jenkins.executor.count{$instance} by {instance}",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "solid"
+            },
+            "type": "area"
+          }
+        ]
+      },
+      "title": "Executors count"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "requests": [
+          {
+            "q": "max:jenkins.plugins.active{$instance} by {instance}",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "solid"
+            },
+            "type": "line"
+          },
+          {
+            "q": "max:jenkins.plugins.inactive{$instance} by {instance}",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "solid"
+            },
+            "type": "line"
+          }
+        ]
+      },
+      "title": "Active/inactive plugins"
+    },
+    {
+      "definition": {
+        "viz": "toplist",
+        "requests": [
+          {
+            "q": "top(max:jenkins.job.count{$instance} by {instance}, 10, 'mean', 'desc')",
+            "style": {
+              "palette": "dog_classic"
+            }
+          }
+        ]
+      },
+      "title": "Job count"
+    },
+    {
+      "definition": {
+        "viz": "toplist",
+        "requests": [
+          {
+            "q": "top(max:jenkins.plugins.with_update{$instance} by {instance}, 10, 'mean', 'desc')",
+            "style": {
+              "palette": "dog_classic"
+            }
+          }
+        ]
+      },
+      "title": "Plugins with update available"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "requests": [
+          {
+            "q": "avg:jenkins.kubernetes.total{$instance}",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "solid"
+            },
+            "type": "line"
+          }
+        ]
+      },
+      "title": "Number of agents provisioned since startup"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "requests": [
+          {
+            "q": "max:jenkins.kubernetes_client.connections.running{$instance}",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "solid"
+            },
+            "type": "line"
+          }
+        ]
+      },
+      "title": "Kubernetes Client HTTP connections"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "requests": [
+          {
+            "q": "avg:jenkins.kubernetes.duration.mean{$instance}",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "solid"
+            },
+            "type": "line"
+          }
+        ]
+      },
+      "title": "Average provisioning time (ms)"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "requests": [
+          {
+            "q": "max:jvm.heap_memory{$instance} by {instance}",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "solid"
+            },
+            "type": "line"
+          }
+        ]
+      },
+      "title": "Masters JVM Heap memory"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "requests": [
+          {
+            "q": "max:jvm.thread_count{$instance} by {instance}",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "solid"
+            },
+            "type": "line"
+          }
+        ]
+      },
+      "title": "Masters JVM Threads count"
+    },
+    {
+      "definition": {
+        "viz": "timeseries",
+        "requests": [
+          {
+            "q": "max:jvm.non_heap_memory{$instance} by {instance}",
+            "style": {
+              "palette": "dog_classic",
+              "width": "normal",
+              "type": "solid"
+            },
+            "type": "line"
+          }
+        ]
+      },
+      "title": "Masters JVM non heap memory"
+    }
+  ],
+  "template_variables": [
+    {
+      "default": "*",
+      "prefix": "instance",
+      "name": "instance"
+    }
+  ],
+  "description": "",
+  "title": "CloudBees Core"
+}
